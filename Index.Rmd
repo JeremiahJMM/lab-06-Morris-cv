@@ -1,0 +1,140 @@
+---
+title: "Lab 06 CV - Jeremiah Morris"
+author: Jeremiah Morris
+date: "`r Sys.Date()`"
+output:
+  pagedown::html_resume:
+    css: ['css/custom_resume.css', 'css/styles.css', 'resume']
+    # set it to true for a self-contained HTML page but it'll take longer to render
+    self_contained: true
+---
+
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  results='asis', 
+  echo = FALSE
+)
+library(tidyverse)
+library(glue)
+
+# Set this to true to have links turned into footnotes at the end of the document
+PDF_EXPORT <- TRUE
+
+# Holds all the links that were inserted for placement at the end
+links <- c()
+
+source('parsing_functions.R')
+
+
+# First let's get the data, filtering to only the items tagged as
+# Resume items
+position_data <- read_csv('positions.csv') %>% 
+  filter(in_resume) %>% 
+  mutate(
+    # Build some custom sections by collapsing others
+    section = case_when(
+      section %in% c('research_positions', 'industry_positions', 'sporting_positions') ~ 'positions', 
+      section %in% c('data_science_writings', 'by_me_press') ~ 'writings',
+      TRUE ~ section
+    )
+  ) 
+
+```
+
+
+Aside
+================================================================================
+
+
+
+Contact {#contact}
+--------------------------------------------------------------------------------
+
+
+
+- <i class="fa fa-envelope"></i> morrismjeremiah@gmail.com
+- <i class="fa fa-github"></i> https://github.com/JeremiahJMM
+- <i class="fa fa-link"></i> [https://github.com/JeremiahJMM/lab-06-Morris-cv](https://github.com/JeremiahJMM/lab-06-Morris-cv)
+
+
+
+Language Skills {#skills}
+--------------------------------------------------------------------------------
+
+
+```{r}
+skills <- tribble(
+  ~skill,               ~level,
+  "R",                  5,
+  "Javascript (d3.js)", 2,
+  "Python",             4,
+  "Bash",               1.5,
+  "SQL",                5,
+  "C++",                1,
+  "AWK",                2
+)
+build_skill_bars(skills)
+```
+
+
+
+Open Source Contributions {#open-source}
+--------------------------------------------------------------------------------
+
+All projects available at `github.com/Watts-College/<name>`
+
+
+- `montyhall`: R package to solve the MontyHall problem
+
+
+More info {#more-info}
+--------------------------------------------------------------------------------
+
+See full CV [here](https://github.com/JeremiahJMM/lab-06-Morris-cv/cv.html) for more complete list of positions and publications.
+
+
+Disclaimer {#disclaimer}
+--------------------------------------------------------------------------------
+
+Made w/ [**pagedown**](https://github.com/rstudio/pagedown). 
+
+Source code: [https://github.com/JeremiahJMM](https://github.com/JeremiahJMM).
+
+Last updated on `r Sys.Date()`.
+
+
+
+
+Main
+================================================================================
+
+Jeremiah Morris {#title}
+--------------------------------------------------------------------------------
+
+```{r}
+intro_text <- "Implementation Specialist with experience in client implementation, reporting workflows, and technical writing. Currently managing large-scale client accounts at ADP while building skills in data analytics and program evaluation."
+
+cat(sanitize_links(intro_text))
+```
+
+
+
+Education {data-icon=graduation-cap data-concise=true}
+--------------------------------------------------------------------------------
+
+```{r}
+position_data %>% print_section('education')
+```
+
+
+
+Work Experience {data-icon=suitcase}
+--------------------------------------------------------------------------------
+
+```{r}
+position_data %>% print_section('positions')
+```
+
+
+
